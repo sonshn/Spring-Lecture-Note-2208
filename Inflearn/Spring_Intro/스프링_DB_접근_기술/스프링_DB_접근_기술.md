@@ -141,6 +141,61 @@ private void close(Connection conn) throws SQLException{
 
 ### JPA
 
+- **MyBatis**와 비교하여 국내에서는 비슷하지만, **전세계적으로는 JPA가 압도적**이다.
+- JPA는 기존의 반복 코드는 물론이고, **기본적인 SQL도 JPA가 직접 만들어서 실행**해준다.
+- JPA를 사용하면, SQL과 데이터 중심의 설계에서 **객체 중심의 설계로 패러다임을 전환**할 수 있다.
+- JPA를 사용하면 개발 생산성을 크게 높일 수 있다.
+
+<br>
+
+#### ```build.gradle``` 파일에 JPA, h2 데이터베이스 관련 라이브러리 추가
+
+- ```spring-boot-starter-jdbc``` -> ```spring-boot-starter-data-jpa```
+
+<br>
+
+#### 스프링 부트에 JPA 설정 추가
+
+- ```show-sql```: JPA가 생성하는 SQL을 출력한다.
+- ```ddl-auto```: JPA는 테이블을 자동으로 생성하는 기능을 제공하는데 ```none```을 사용하면 해당 기능을 끈다.
+    - ```create```를 사용하면 엔티티 정보를 바탕으로 테이블도 직접 생성해준다.
+
+<br>
+
+#### JPA 엔티티 매핑
+
+- JPA는 **인터페이스**
+- **구현체**는 Hibernate, Eclipse 등이 있지만 주로 Hibernate를 많이 사용
+- JPA는 **ORM**이라는 기술
+
+<br>
+
+- ```@Entity```: DB와의 Mapping은 Annotation으로 한다. (JPA가 관리하는 Entity라는 의미이다.)
+- ```@Id @GeneratedValue(strategy = GenerationType.IDENTITY)```: Query에 ID를 넣는 게 아니라, DB에 값을 넣으면 DB가 ID를 자동으로 생성해주는데, 이것을 IDENTITY 전략이라고 한다.
+
+<br>
+
+#### JPA 회원 리포지토리
+
+- ```private final EntityManager em;```
+    - JPA는 ```EntityManager```로 모든 것이 동작을 한다. Spring Boot에 의해 자동으로 생성된 ```em```을 Injection만 해주면 된다.
+- ```em.persist()```
+- ```em.find(조회할 type, Primary Key)```
+- **JPQL**: 객체를 대상으로 날리는 Query이며, SQL로 번역이 가능하다.
+    - ```em.createQuery("select m from Member m where m.name = :name", Member.class)```
+    - CRUD는 자동으로 해주기 때문에 SQL문을 작성할 필요가 없고, PK 기반이 아닌 것들에만 JPQL로 작성한다.
+
+<br>
+
+#### 서비스 계층에 트랜잭션 추가
+
+- **JPA를 사용하려면 늘 트랜잭션이라는 것이 있어야 한다.**
+- **JPA를 통한 모든 데이터 변경은 트랜잭션 안에서 실행해야 한다.**
+
+<br>
+
+#### JPA를 사용하도록 스프링 설정 변경
+
 ---
 
 ### 스프링 데이터 JPA
