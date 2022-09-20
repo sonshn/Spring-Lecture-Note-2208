@@ -99,9 +99,43 @@ private void close(Connection conn) throws SQLException{
 
 ### 스프링 통합 테스트
 
+- 스프링 컨테이너와 DB까지 연결한 통합 테스트
+    - 보통은 운영 DB와 테스트 전용 DB를 분리
+
+#### 회원 서비스 스프링 통합 테스트
+
+- 통합 테스트보다는 단위 테스트가 더 좋을 확률이 높다.
+- 따라서 **단위 테스트를 할 수 있는 능력**과, **스프링 컨테이너 없이 테스트 할 수 있는 능력**을 훈련해야 한다.
+- 스프링 컨테이너가 있는 테스트는 테스트 설계가 잘못되었을 확률이 높다.
+
+<br>
+
+- ```@SpringBootTest```: 스프링 컨테이너와 테스트를 함께 실행한다.
+- **```@Transactional```**:
+    - **"테스트는 반복할 수 있어야 한다."**
+    - 테스트 케이스에 이 Annotation이 있으면, 테스트 시작 전에 트랜잭션을 시작하고, 테스트 완료 후에 항상 롤백한다. 이렇게 하면 DB에 데이터가 남지 않으므로 다음 테스트에 영향을 주지 않는다.
+
 ---
 
 ### 스프링 JdbcTemplate
+
+- **실무에서 많이 사용한다.**
+- 순수 Jdbc와 동일한 환경설정을 하면 된다.
+- 스프링 JdbcTemplate과 MyBatis 같은 라이브러리는 JDBC API에서 본 반복 코드를 대부분 제거해준다. 하지만 SQL은 직접 작성해야 한다.
+
+<br>
+
+- ```JdbcTemplate```
+    - Template Method 패턴을 사용한다.
+    - Injection을 직접 못하기 때문에 ```datasource```를 인자로 넣어주어야 한다.
+
+- ```withTableName```, ```usingGeneratedKeyColumns```: 이 메소드들을 사용하면 Query문을 작성할 이유가 없다.
+
+- ```private RowMapper<Member> memberRowMapper()```: 객체 생성과 관련 (Callback 함수)
+
+<br>
+
+#### JdbcTemplate을 사용하도록 스프링 설정 변경
 
 ---
 
